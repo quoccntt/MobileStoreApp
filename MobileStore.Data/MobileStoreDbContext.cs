@@ -1,9 +1,16 @@
-﻿using MobileStore.Model.Models;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
+using System;
+using System.Collections.Generic;
 using System.Data.Entity;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using MobileStore.Model.Models;
+
 
 namespace MobileStore.Data
 {
-    public class MobileStoreDbContext : DbContext
+    public class MobileStoreDbContext : IdentityDbContext<ApplicationUser>
     {
         public MobileStoreDbContext() : base("MobileStoreConnection")
         {
@@ -29,20 +36,30 @@ namespace MobileStore.Data
 
         public DbSet<Tag> Tags { set; get; }
 
+
+
         public DbSet<VisitorStatistic> VisitorStatistics { set; get; }
+        public DbSet<Error> Errors { set; get; }
+        public DbSet<ContactDetail> ContactDetails { set; get; }
+        public DbSet<Feedback> Feedbacks { set; get; }
+
+        public DbSet<ApplicationGroup> ApplicationGroups { set; get; }
+        public DbSet<ApplicationRole> ApplicationRoles { set; get; }
+        public DbSet<ApplicationRoleGroup> ApplicationRoleGroups { set; get; }
+        public DbSet<ApplicationUserGroup> ApplicationUserGroups { set; get; }
 
         public static MobileStoreDbContext Create()
         {
             return new MobileStoreDbContext();
         }
 
-        //protected override void OnModelCreating(DbModelBuilder builder)
-        //{
-        //    builder.Entity<IdentityUserRole>().HasKey(i => new { i.UserId, i.RoleId }).ToTable("ApplicationUserRoles");
-        //    builder.Entity<IdentityUserLogin>().HasKey(i => i.UserId).ToTable("ApplicationUserLogins");
-        //    builder.Entity<IdentityRole>().ToTable("ApplicationRoles");
-        //    builder.Entity<IdentityUserClaim>().HasKey(i => i.UserId).ToTable("ApplicationUserClaims");
+        protected override void OnModelCreating(DbModelBuilder builder)
+        {
+            builder.Entity<IdentityUserRole>().HasKey(i => new { i.UserId, i.RoleId }).ToTable("ApplicationUserRoles");
+            builder.Entity<IdentityUserLogin>().HasKey(i => i.UserId).ToTable("ApplicationUserLogins");
+            builder.Entity<IdentityRole>().ToTable("ApplicationRoles");
+            builder.Entity<IdentityUserClaim>().HasKey(i => i.UserId).ToTable("ApplicationUserClaims");
 
-        //}
+        }
     }
 }

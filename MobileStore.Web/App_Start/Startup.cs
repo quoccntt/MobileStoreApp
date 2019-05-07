@@ -1,22 +1,15 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using Autofac;
+using Autofac.Integration.Mvc;
+using Autofac.Integration.WebApi;
 using Microsoft.Owin;
-using Owin;
-using Autofac;
-using System.Reflection;
+using MobileStore.Data;
 using MobileStore.Data.Infrastructure;
 using MobileStore.Data.Repositories;
 using MobileStore.Service;
-using System.Web.Mvc;
+using Owin;
+using System.Reflection;
 using System.Web.Http;
-using Autofac.Integration.Mvc;
-using Autofac.Integration.WebApi;
-using MobileStore.Data;
-using Microsoft.AspNet.Identity;
-using MobileStore.Model.Models;
-using Microsoft.Owin.Security;
-using Microsoft.Owin.Security.DataProtection;
-using System.Web;
+using System.Web.Mvc;
 
 [assembly: OwinStartup(typeof(MobileStore.Web.App_Start.Startup))]
 
@@ -30,6 +23,7 @@ namespace MobileStore.Web.App_Start
             ConfigAutofac(app);
             //ConfigureAuth(app);
         }
+
         private void ConfigAutofac(IAppBuilder app)
         {
             var builder = new ContainerBuilder();
@@ -42,13 +36,12 @@ namespace MobileStore.Web.App_Start
 
             builder.RegisterType<MobileStoreDbContext>().AsSelf().InstancePerRequest();
 
-           // Asp.net Identity
+            // Asp.net Identity
             //builder.RegisterType<ApplicationUserStore>().As<IUserStore<ApplicationUser>>().InstancePerRequest();
             //builder.RegisterType<ApplicationUserManager>().AsSelf().InstancePerRequest();
             //builder.RegisterType<ApplicationSignInManager>().AsSelf().InstancePerRequest();
             //builder.Register(c => HttpContext.Current.GetOwinContext().Authentication).InstancePerRequest();
             //builder.Register(c => app.GetDataProtectionProvider()).InstancePerRequest();
-
 
             // Repositories
             builder.RegisterAssemblyTypes(typeof(PostCategoryRepository).Assembly)
@@ -64,7 +57,6 @@ namespace MobileStore.Web.App_Start
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
 
             GlobalConfiguration.Configuration.DependencyResolver = new AutofacWebApiDependencyResolver((IContainer)container); //Set the WebApi DependencyResolver
-
         }
     }
 }
